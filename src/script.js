@@ -11,11 +11,20 @@ const size = {
     height: window.innerHeight,
 };
 
-// Create cube model for test
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+const gui = new dat.GUI();
+
+const geometryPlane = new THREE.PlaneGeometry(20, 20);
+const materialPlane = new THREE.MeshBasicMaterial({
+    color: '#72a852',
+    side: THREE.DoubleSide,
+});
+const ground = new THREE.Mesh(geometryPlane, materialPlane);
+const groundRotX = -Math.PI * 0.5;
+ground.rotation.x = groundRotX;
+ground.position.y = 1;
+
+scene.add(ground);
+gui.add(ground.rotation, 'x').min(groundRotX).max(2).step(0.001);
 
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
@@ -57,10 +66,16 @@ const camera = new THREE.PerspectiveCamera(
     75,
     size.width / size.height,
     0.1,
-    100,
+    1000,
 );
-camera.position.z = 3;
+camera.position.x = 4;
+camera.position.y = 3.5;
+camera.position.z = 5;
 scene.add(camera);
+
+gui.add(camera.position, 'x').min(0.1).max(10).step(0.1);
+gui.add(camera.position, 'y').min(1.2).max(10).step(0.1);
+gui.add(camera.position, 'z').min(0.1).max(20).step(0.1);
 
 // Add orientation of camera
 const controls = new OrbitControls(camera, canvas);
