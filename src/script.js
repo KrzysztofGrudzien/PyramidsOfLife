@@ -49,14 +49,47 @@ const doorRoughnessTexture = texture.load('/textures/door/roughness.jpg');
 const doorHeightTexture = texture.load('/textures/door/height.jpg');
 const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
 const doorAlphaTexture = texture.load('/textures/door/alpha.jpg');
+const grassAmbientTexture = texture.load(
+    '/textures/grass/ambientOcclusion.jpg',
+);
+const grassBaseTexture = texture.load('/textures/grass/color.jpg');
+const grassNormalTexture = texture.load('/textures/grass/normal.jpg');
+const grassRoughnessTexture = texture.load('/textures/grass/roughness.jpg');
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(20, 20);
 const materialPlane = new THREE.MeshBasicMaterial({
-    color: '#72a852',
+    map: grassBaseTexture,
+    aoMap: grassAmbientTexture,
+    transparent: true,
+    normalMap: grassNormalTexture,
+    roughnessMap: grassRoughnessTexture,
     side: THREE.DoubleSide,
 });
+
+grassBaseTexture.repeat.set(8, 8);
+grassAmbientTexture.repeat.set(8, 8);
+
+grassNormalTexture.repeat.set(8, 8);
+grassRoughnessTexture.repeat.set(8, 8);
+
+grassBaseTexture.wrapS = THREE.RepeatWrapping;
+grassAmbientTexture.wrapS = THREE.RepeatWrapping;
+
+grassNormalTexture.wrapS = THREE.RepeatWrapping;
+grassRoughnessTexture.wrapS = THREE.RepeatWrapping;
+
+grassBaseTexture.wrapT = THREE.RepeatWrapping;
+grassAmbientTexture.wrapT = THREE.RepeatWrapping;
+
+grassNormalTexture.wrapT = THREE.RepeatWrapping;
+grassRoughnessTexture.wrapT = THREE.RepeatWrapping;
+
 const ground = new THREE.Mesh(geometryPlane, materialPlane);
+ground.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(ground.geometry.attributes.uv.array, 2),
+);
 const groundRotX = -Math.PI * 0.5;
 ground.rotation.x = groundRotX;
 ground.position.y = 1;
@@ -104,7 +137,7 @@ scene.add(pyramid);
 
 //create door to the piramid
 
-const geometryDoor = new THREE.PlaneGeometry(1.2, 1.8);
+const geometryDoor = new THREE.PlaneGeometry(1.1, 1.3);
 const materialDoor = new THREE.MeshBasicMaterial({
     map: doorBaseTexture,
     aoMap: doorAmbientTexture,
@@ -114,7 +147,7 @@ const materialDoor = new THREE.MeshBasicMaterial({
     side: THREE.DoubleSide,
     alphaMap: doorAlphaTexture,
     displacementMap: doorHeightTexture,
-    displacementScale: 0.1,
+    displacementScale: 0.3,
     metalnessMap: doorMentalnessTexture,
 });
 const door = new THREE.Mesh(geometryDoor, materialDoor);
@@ -122,9 +155,9 @@ door.geometry.setAttribute(
     'uv2',
     new THREE.Float32BufferAttribute(door.geometry.attributes.uv.array, 2),
 );
-door.position.z = 2.08;
-door.position.y = 2.2;
-door.rotation.x = -0.45;
+door.position.z = 2.21;
+door.position.y = 1.9;
+door.rotation.x = -0.455;
 door.position.x = 0;
 scene.add(door);
 
