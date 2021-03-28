@@ -54,7 +54,7 @@ const grassRoughnessTexture = texture.load('/textures/grass/roughness.jpg');
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(20, 20);
-const materialPlane = new THREE.MeshBasicMaterial({
+const materialPlane = new THREE.MeshStandardMaterial({
     map: grassBaseTexture,
     aoMap: grassAmbientTexture,
     transparent: true,
@@ -91,11 +91,15 @@ ground.rotation.x = groundRotX;
 ground.position.y = 1;
 scene.add(ground);
 
-gui.add(ground.rotation, 'x').min(groundRotX).max(2).step(0.001);
+gui.add(ground.rotation, 'x')
+    .min(groundRotX)
+    .max(2)
+    .step(0.001)
+    .name('ground rotX');
 
 // create pyramid
 const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
-const materialPyramid = new THREE.MeshBasicMaterial({
+const materialPyramid = new THREE.MeshStandardMaterial({
     map: baseTexture,
     aoMap: ambientTexture,
     transparent: true,
@@ -134,7 +138,7 @@ scene.add(pyramid);
 //create door to the piramid
 
 const geometryDoor = new THREE.PlaneGeometry(1.1, 1.3);
-const materialDoor = new THREE.MeshBasicMaterial({
+const materialDoor = new THREE.MeshStandardMaterial({
     map: doorBaseTexture,
     aoMap: doorAmbientTexture,
     transparent: true,
@@ -157,6 +161,39 @@ door.rotation.x = -0.455;
 door.position.x = 0;
 scene.add(door);
 
+// Ambient light
+const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.2);
+gui.add(ambientLight, 'intensity')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('ambient light intensity');
+scene.add(ambientLight);
+
+// Directional light
+const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.2);
+directionalLight.position.set(4, 5, -2);
+gui.add(directionalLight.position, 'x')
+    .min(-5)
+    .max(5)
+    .step(0.001)
+    .name('directional light posX');
+gui.add(directionalLight.position, 'y')
+    .min(-5)
+    .max(5)
+    .step(0.001)
+    .name('directional light posY');
+gui.add(directionalLight.position, 'z')
+    .min(-5)
+    .max(5)
+    .step(0.001)
+    .name('directional light posZ');
+gui.add(directionalLight, 'intensity')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('directional light intensity');
+scene.add(directionalLight);
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
     // Update sizes
@@ -205,9 +242,9 @@ camera.position.y = 3.5;
 camera.position.z = 10;
 scene.add(camera);
 
-gui.add(camera.position, 'x').min(0.1).max(10).step(0.1);
-gui.add(camera.position, 'y').min(1.2).max(10).step(0.1);
-gui.add(camera.position, 'z').min(0.1).max(20).step(0.1);
+gui.add(camera.position, 'x').min(0.1).max(10).step(0.1).name('camera posX');
+gui.add(camera.position, 'y').min(1.2).max(10).step(0.1).name('camera posY');
+gui.add(camera.position, 'z').min(0.1).max(20).step(0.1).name('camera posZ');
 
 // Add orientation of camera
 const controls = new OrbitControls(camera, canvas);
