@@ -33,15 +33,11 @@ loadingManager.onProgress = () => {
 };
 
 const texture = new THREE.TextureLoader(loadingManager);
-const ambientTexture = texture.load(
-    '/textures/Concrete_Blocks_007_ambientOcclusion.jpg',
-);
-const baseTexture = texture.load('/textures/Concrete_Blocks_007_basecolor.jpg');
-const heightTexture = texture.load('/textures/Concrete_Blocks_007_height.jpg');
-const normalTexture = texture.load('/textures/Concrete_Blocks_007_normal.jpg');
-const roughnessTexture = texture.load(
-    '/textures/Concrete_Blocks_007_roughness.jpg',
-);
+const ambientTexture = texture.load('/textures/bricks/ambientOcclusion.jpg');
+const baseTexture = texture.load('/textures/bricks/color.jpg');
+const heightTexture = texture.load('/textures/bricks/height.jpg');
+const normalTexture = texture.load('/textures/bricks/normal.jpg');
+const roughnessTexture = texture.load('/textures/bricks/roughness.jpg');
 const doorAmbientTexture = texture.load('/textures/door/ambientOcclusion.jpg');
 const doorBaseTexture = texture.load('/textures/door/color.jpg');
 const doorNormalTexture = texture.load('/textures/door/normal.jpg');
@@ -206,7 +202,7 @@ const camera = new THREE.PerspectiveCamera(
 
 camera.position.x = 4;
 camera.position.y = 3.5;
-camera.position.z = 5;
+camera.position.z = 10;
 scene.add(camera);
 
 gui.add(camera.position, 'x').min(0.1).max(10).step(0.1);
