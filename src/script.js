@@ -194,6 +194,11 @@ gui.add(directionalLight, 'intensity')
     .step(0.001)
     .name('directional light intensity');
 scene.add(directionalLight);
+
+// Point light
+const pointLight = new THREE.PointLight('#1343c9', 1, 5);
+pointLight.position.set(0, 4, 3);
+scene.add(pointLight);
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
     // Update sizes
