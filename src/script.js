@@ -3,16 +3,20 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 
+// create scene
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
+// setup global window size
 const size = {
     width: window.innerWidth,
     height: window.innerHeight,
 };
 
+// setup data gui
 const gui = new dat.GUI();
 
+// create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(20, 20);
 const materialPlane = new THREE.MeshBasicMaterial({
     color: '#72a852',
@@ -22,9 +26,31 @@ const ground = new THREE.Mesh(geometryPlane, materialPlane);
 const groundRotX = -Math.PI * 0.5;
 ground.rotation.x = groundRotX;
 ground.position.y = 1;
-
 scene.add(ground);
+
 gui.add(ground.rotation, 'x').min(groundRotX).max(2).step(0.001);
+
+// create pyramid
+const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
+const materialPyramid = new THREE.MeshBasicMaterial({ color: '#1078bd' });
+const pyramid = new THREE.Mesh(geometryPyramid, materialPyramid);
+pyramid.position.y = 3.8;
+pyramid.rotation.y = Math.PI;
+scene.add(pyramid);
+
+//create door to the piramid
+
+const geometryDoor = new THREE.PlaneGeometry(1, 1.8);
+const materialDoor = new THREE.MeshBasicMaterial({
+    color: '#1353a5',
+    side: THREE.DoubleSide,
+});
+const door = new THREE.Mesh(geometryDoor, materialDoor);
+door.position.z = 2.08;
+door.position.y = 2.2;
+door.rotation.x = -0.45;
+door.position.x = 0;
+scene.add(door);
 
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
@@ -68,6 +94,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000,
 );
+
 camera.position.x = 4;
 camera.position.y = 3.5;
 camera.position.z = 5;
