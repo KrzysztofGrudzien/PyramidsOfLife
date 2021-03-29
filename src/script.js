@@ -7,6 +7,10 @@ import * as dat from 'dat.gui';
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
+// add fog
+const fog = new THREE.Fog('#1c5fc4', 1, 30);
+scene.fog = fog;
+
 // setup global window size
 const size = {
     width: window.innerWidth,
