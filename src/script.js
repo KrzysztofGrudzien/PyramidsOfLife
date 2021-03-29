@@ -226,6 +226,13 @@ bigPyramid.add(
 );
 scene.add(bigPyramid);
 
+const flyLightOne = new THREE.PointLight('#1c5fc4', 3, 5);
+scene.add(flyLightOne);
+const flyLightTwo = new THREE.PointLight('#1c5fc4', 2, 3);
+scene.add(flyLightTwo);
+const flyLightThree = new THREE.PointLight('#1c5fc4', 4, 8);
+scene.add(flyLightThree);
+
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
     // Update sizes
@@ -298,7 +305,19 @@ const clock = new THREE.Clock();
 const animate = () => {
     const elapsedTime = clock.getElapsedTime();
     bigPyramid.position.y = Math.sin(elapsedTime * 0.1) + 1;
-    // bigPyramid.rotation.y = (Math.sin(elapsedTime * 0.1) * Math.PI) / 4;
+    const time = elapsedTime * 0.5;
+    const timeTwo = -elapsedTime * 0.2;
+    flyLightOne.position.x = Math.cos(time) * 4;
+    flyLightOne.position.z = Math.sin(time) * 8;
+    flyLightOne.position.y = Math.sin(time) * 4;
+
+    flyLightTwo.position.x = -Math.cos(timeTwo) * 7;
+    flyLightTwo.position.z = Math.sin(timeTwo) * 2;
+    flyLightTwo.position.y = Math.sin(time) * 5 + Math.sin(time) * 2.5;
+
+    flyLightThree.position.x = Math.cos(time) * 6;
+    flyLightThree.position.z = -Math.sin(time) * 2;
+    flyLightThree.position.y = -Math.cos(time) * 5;
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
