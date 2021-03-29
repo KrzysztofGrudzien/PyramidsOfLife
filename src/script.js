@@ -8,7 +8,7 @@ const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
 // add fog
-const fog = new THREE.Fog('#1c5fc4', 1, 30);
+const fog = new THREE.Fog('#1c5fc4', 1, 15);
 scene.fog = fog;
 
 // setup global window size
@@ -37,11 +37,13 @@ loadingManager.onProgress = () => {
 };
 
 const texture = new THREE.TextureLoader(loadingManager);
-const ambientTexture = texture.load('/textures/bricks/ambientOcclusion.jpg');
-const baseTexture = texture.load('/textures/bricks/color.jpg');
-const heightTexture = texture.load('/textures/bricks/height.jpg');
-const normalTexture = texture.load('/textures/bricks/normal.jpg');
-const roughnessTexture = texture.load('/textures/bricks/roughness.jpg');
+const bricksAmbientTexture = texture.load(
+    '/textures/bricks/ambientOcclusion.jpg',
+);
+const bricksBaseTexture = texture.load('/textures/bricks/color.jpg');
+const bricksHeightTexture = texture.load('/textures/bricks/height.jpg');
+const bricksNormalTexture = texture.load('/textures/bricks/normal.jpg');
+const bricksRoughnessTexture = texture.load('/textures/bricks/roughness.jpg');
 const doorAmbientTexture = texture.load('/textures/door/ambientOcclusion.jpg');
 const doorBaseTexture = texture.load('/textures/door/color.jpg');
 const doorNormalTexture = texture.load('/textures/door/normal.jpg');
@@ -49,38 +51,36 @@ const doorRoughnessTexture = texture.load('/textures/door/roughness.jpg');
 const doorHeightTexture = texture.load('/textures/door/height.jpg');
 const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
 const doorAlphaTexture = texture.load('/textures/door/alpha.jpg');
-const grassAmbientTexture = texture.load(
-    '/textures/bricks/ambientOcclusion.jpg',
-);
-const grassBaseTexture = texture.load('/textures/bricks/color.jpg');
-const grassNormalTexture = texture.load('/textures/bricks/normal.jpg');
-const grassRoughnessTexture = texture.load('/textures/bricks/roughness.jpg');
 
 // create flat ground under scene
-const geometryPlane = new THREE.PlaneGeometry(20, 20);
+const geometryPlane = new THREE.PlaneGeometry(40, 40);
 const materialPlane = new THREE.MeshStandardMaterial({
-    map: grassBaseTexture,
-    aoMap: grassAmbientTexture,
+    map: bricksBaseTexture,
+    aoMap: bricksAmbientTexture,
     transparent: true,
-    normalMap: grassNormalTexture,
-    roughnessMap: grassRoughnessTexture,
+    displacementMap: bricksHeightTexture,
+    normalMap: bricksNormalTexture,
+    roughnessMap: bricksRoughnessTexture,
     side: THREE.DoubleSide,
 });
 
-grassBaseTexture.repeat.set(8, 8);
-grassAmbientTexture.repeat.set(8, 8);
-grassNormalTexture.repeat.set(8, 8);
-grassRoughnessTexture.repeat.set(8, 8);
+bricksBaseTexture.repeat.set(24, 16);
+bricksAmbientTexture.repeat.set(24, 16);
+bricksNormalTexture.repeat.set(24, 16);
+bricksRoughnessTexture.repeat.set(24, 16);
+bricksHeightTexture.repeat.set(24, 16);
 
-grassBaseTexture.wrapS = THREE.RepeatWrapping;
-grassAmbientTexture.wrapS = THREE.RepeatWrapping;
-grassNormalTexture.wrapS = THREE.RepeatWrapping;
-grassRoughnessTexture.wrapS = THREE.RepeatWrapping;
+bricksBaseTexture.wrapS = THREE.RepeatWrapping;
+bricksAmbientTexture.wrapS = THREE.RepeatWrapping;
+bricksNormalTexture.wrapS = THREE.RepeatWrapping;
+bricksRoughnessTexture.wrapS = THREE.RepeatWrapping;
+bricksHeightTexture.wrapS = THREE.RepeatWrapping;
 
-grassBaseTexture.wrapT = THREE.RepeatWrapping;
-grassAmbientTexture.wrapT = THREE.RepeatWrapping;
-grassNormalTexture.wrapT = THREE.RepeatWrapping;
-grassRoughnessTexture.wrapT = THREE.RepeatWrapping;
+bricksBaseTexture.wrapT = THREE.RepeatWrapping;
+bricksAmbientTexture.wrapT = THREE.RepeatWrapping;
+bricksNormalTexture.wrapT = THREE.RepeatWrapping;
+bricksRoughnessTexture.wrapT = THREE.RepeatWrapping;
+bricksHeightTexture.wrapT = THREE.RepeatWrapping;
 
 const ground = new THREE.Mesh(geometryPlane, materialPlane);
 ground.geometry.setAttribute(
@@ -101,32 +101,14 @@ gui.add(ground.rotation, 'x')
 // create pyramid
 const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
 const materialPyramid = new THREE.MeshStandardMaterial({
-    map: baseTexture,
-    aoMap: ambientTexture,
-    //transparent: true,
-    displacementMap: heightTexture,
-    normalMap: normalTexture,
-    roughnessMap: roughnessTexture,
+    map: bricksBaseTexture,
+    aoMap: bricksAmbientTexture,
+    transparent: true,
+    displacementMap: bricksHeightTexture,
+    normalMap: bricksNormalTexture,
+    roughnessMap: bricksRoughnessTexture,
     side: THREE.DoubleSide,
 });
-
-baseTexture.repeat.set(32, 8);
-ambientTexture.repeat.set(32, 8);
-heightTexture.repeat.set(32, 8);
-normalTexture.repeat.set(32, 8);
-roughnessTexture.repeat.set(32, 8);
-
-baseTexture.wrapS = THREE.RepeatWrapping;
-ambientTexture.wrapS = THREE.RepeatWrapping;
-heightTexture.wrapS = THREE.RepeatWrapping;
-normalTexture.wrapS = THREE.RepeatWrapping;
-roughnessTexture.wrapS = THREE.RepeatWrapping;
-
-baseTexture.wrapT = THREE.RepeatWrapping;
-ambientTexture.wrapT = THREE.RepeatWrapping;
-heightTexture.wrapT = THREE.RepeatWrapping;
-normalTexture.wrapT = THREE.RepeatWrapping;
-roughnessTexture.wrapT = THREE.RepeatWrapping;
 
 const pyramid = new THREE.Mesh(geometryPyramid, materialPyramid);
 pyramid.geometry.setAttribute(
@@ -226,6 +208,7 @@ bigPyramid.add(
 );
 scene.add(bigPyramid);
 
+// create additional lights
 const flyLightOne = new THREE.PointLight('#1c5fc4', 3, 5);
 scene.add(flyLightOne);
 const flyLightTwo = new THREE.PointLight('#1c5fc4', 2, 3);
@@ -297,6 +280,7 @@ const renderer = new THREE.WebGLRenderer({
 // Set up sizes and pixel ratio for window resolution
 renderer.setSize(size.width, size.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor('#1c5fc4');
 
 // Get time from Three.js
 const clock = new THREE.Clock();
