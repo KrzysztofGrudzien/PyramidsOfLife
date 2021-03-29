@@ -165,10 +165,11 @@ pyramidSmallRightCornerFar.geometry.setAttribute(
         2,
     ),
 );
-pyramidSmallRightCornerFar.position.y = 3.5;
+pyramidSmallRightCornerFar.position.y = 2.1;
 pyramidSmallRightCornerFar.position.x = 15;
 pyramidSmallRightCornerFar.rotation.y = Math.PI;
-pyramidSmallRightCornerFar.position.z = -2;
+pyramidSmallRightCornerFar.position.z = -1;
+pyramidSmallRightCornerFar.scale.set(0.5, 0.5, 0.5);
 scene.add(pyramidSmallRightCornerFar);
 
 //create door to the piramid
