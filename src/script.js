@@ -205,7 +205,7 @@ door.position.x = 0;
 scene.add(door);
 
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.2);
+const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.4);
 gui.add(ambientLight, 'intensity')
     .min(0)
     .max(1)
@@ -305,6 +305,7 @@ for (let i = 0; i < 20; i++) {
         ),
     );
 
+    sphere.castShadow = true;
     spheres.add(sphere);
     sphere.position.set(posX, 1.5, posZ);
 }
@@ -377,6 +378,34 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(size.width, size.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor('#1c5fc4');
+
+// add shadows
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+directionalLight.castShadow = true;
+ambientLight.castShadow = true;
+spherePointLight.castShadow = true;
+
+flyLightOne.castShadow = true;
+flyLightOne.shadow.mapSize.width = 256;
+flyLightOne.shadow.mapSize.height = 256;
+flyLightOne.shadow.camera.far = 7;
+
+flyLightTwo.castShadow = true;
+flyLightTwo.shadow.mapSize.width = 256;
+flyLightTwo.shadow.mapSize.height = 256;
+flyLightTwo.shadow.camera.far = 7;
+
+flyLightThree.castShadow = true;
+flyLightThree.shadow.mapSize.width = 256;
+flyLightThree.shadow.mapSize.height = 256;
+flyLightThree.shadow.camera.far = 7;
+
+bigPyramid.castShadow = true;
+pyramidSmallLeftCorner.castShadow = true;
+pyramidSmallRightCornerFar.castShadow = true;
+pyramidSmallRightCornerNear.castShadow = true;
+ground.receiveShadow = true;
 
 // Get time from Three.js
 const clock = new THREE.Clock();
