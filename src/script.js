@@ -119,6 +119,58 @@ pyramid.position.y = 3.8;
 pyramid.rotation.y = Math.PI;
 scene.add(pyramid);
 
+const pyramidSmallLeftCorner = new THREE.Mesh(geometryPyramid, materialPyramid);
+pyramidSmallLeftCorner.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(
+        pyramidSmallLeftCorner.geometry.attributes.uv.array,
+        2,
+    ),
+);
+
+pyramidSmallLeftCorner.position.y = 3.5;
+pyramidSmallLeftCorner.position.x = -16;
+pyramidSmallLeftCorner.position.z = 3;
+pyramidSmallLeftCorner.rotation.y = Math.PI;
+scene.add(pyramidSmallLeftCorner);
+
+const pyramidSmallRightCornerNear = new THREE.Mesh(
+    geometryPyramid,
+    materialPyramid,
+);
+
+pyramidSmallRightCornerNear.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(
+        pyramidSmallRightCornerNear.geometry.attributes.uv.array,
+        2,
+    ),
+);
+
+pyramidSmallRightCornerNear.position.y = 3.5;
+pyramidSmallRightCornerNear.position.x = 8;
+pyramidSmallRightCornerNear.position.z = 12;
+pyramidSmallRightCornerNear.rotation.y = Math.PI * 0.5;
+scene.add(pyramidSmallRightCornerNear);
+
+const pyramidSmallRightCornerFar = new THREE.Mesh(
+    geometryPyramid,
+    materialPyramid,
+);
+
+pyramidSmallRightCornerFar.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(
+        pyramidSmallRightCornerFar.geometry.attributes.uv.array,
+        2,
+    ),
+);
+pyramidSmallRightCornerFar.position.y = 3.5;
+pyramidSmallRightCornerFar.position.x = 15;
+pyramidSmallRightCornerFar.rotation.y = Math.PI;
+pyramidSmallRightCornerFar.position.z = -2;
+scene.add(pyramidSmallRightCornerFar);
+
 //create door to the piramid
 
 const geometryDoor = new THREE.PlaneGeometry(1.1, 1.3);
@@ -259,9 +311,9 @@ const camera = new THREE.PerspectiveCamera(
     1000,
 );
 
-camera.position.x = 4;
-camera.position.y = 3.5;
-camera.position.z = 10;
+camera.position.x = 0;
+camera.position.y = 4.8;
+camera.position.z = 12.8;
 scene.add(camera);
 
 gui.add(camera.position, 'x').min(0.1).max(10).step(0.1).name('camera posX');
