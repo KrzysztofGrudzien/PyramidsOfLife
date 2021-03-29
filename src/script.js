@@ -190,7 +190,7 @@ const materialDoor = new THREE.MeshStandardMaterial({
     normalMap: doorNormalTexture,
     roughnessMap: doorRoughnessTexture,
     side: THREE.DoubleSide,
-    alphaMap: doorAlphaTexture,
+    //alphaMap: doorAlphaTexture,
     displacementMap: doorHeightTexture,
     displacementScale: 0.3,
     metalnessMap: doorMentalnessTexture,
