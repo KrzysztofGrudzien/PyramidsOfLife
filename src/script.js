@@ -50,7 +50,6 @@ const doorNormalTexture = texture.load('/textures/door/normal.jpg');
 const doorRoughnessTexture = texture.load('/textures/door/roughness.jpg');
 const doorHeightTexture = texture.load('/textures/door/height.jpg');
 const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
-const doorAlphaTexture = texture.load('/textures/door/alpha.jpg');
 const sphereAmbientTexture = texture.load(
     '/textures/metal/ambientOcclusion2.jpg',
 );
@@ -190,7 +189,6 @@ const materialDoor = new THREE.MeshStandardMaterial({
     normalMap: doorNormalTexture,
     roughnessMap: doorRoughnessTexture,
     side: THREE.DoubleSide,
-    //alphaMap: doorAlphaTexture,
     displacementMap: doorHeightTexture,
     displacementScale: 0.3,
     metalnessMap: doorMentalnessTexture,
