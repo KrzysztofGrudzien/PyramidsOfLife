@@ -46,11 +46,11 @@ const doorHeightTexture = texture.load('/textures/door/height.jpg');
 const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
 const doorAlphaTexture = texture.load('/textures/door/alpha.jpg');
 const grassAmbientTexture = texture.load(
-    '/textures/grass/ambientOcclusion.jpg',
+    '/textures/bricks/ambientOcclusion.jpg',
 );
-const grassBaseTexture = texture.load('/textures/grass/color.jpg');
-const grassNormalTexture = texture.load('/textures/grass/normal.jpg');
-const grassRoughnessTexture = texture.load('/textures/grass/roughness.jpg');
+const grassBaseTexture = texture.load('/textures/bricks/color.jpg');
+const grassNormalTexture = texture.load('/textures/bricks/normal.jpg');
+const grassRoughnessTexture = texture.load('/textures/bricks/roughness.jpg');
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(20, 20);
@@ -65,19 +65,16 @@ const materialPlane = new THREE.MeshStandardMaterial({
 
 grassBaseTexture.repeat.set(8, 8);
 grassAmbientTexture.repeat.set(8, 8);
-
 grassNormalTexture.repeat.set(8, 8);
 grassRoughnessTexture.repeat.set(8, 8);
 
 grassBaseTexture.wrapS = THREE.RepeatWrapping;
 grassAmbientTexture.wrapS = THREE.RepeatWrapping;
-
 grassNormalTexture.wrapS = THREE.RepeatWrapping;
 grassRoughnessTexture.wrapS = THREE.RepeatWrapping;
 
 grassBaseTexture.wrapT = THREE.RepeatWrapping;
 grassAmbientTexture.wrapT = THREE.RepeatWrapping;
-
 grassNormalTexture.wrapT = THREE.RepeatWrapping;
 grassRoughnessTexture.wrapT = THREE.RepeatWrapping;
 
@@ -102,10 +99,11 @@ const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
 const materialPyramid = new THREE.MeshStandardMaterial({
     map: baseTexture,
     aoMap: ambientTexture,
-    transparent: true,
+    //transparent: true,
     displacementMap: heightTexture,
     normalMap: normalTexture,
     roughnessMap: roughnessTexture,
+    side: THREE.DoubleSide,
 });
 
 baseTexture.repeat.set(32, 8);
@@ -199,6 +197,31 @@ scene.add(directionalLight);
 const pointLight = new THREE.PointLight('#1343c9', 1, 5);
 pointLight.position.set(0, 4, 3);
 scene.add(pointLight);
+
+const pointLightLeftCorner = new THREE.PointLight('#1343c9', 1, 5);
+pointLightLeftCorner.position.set(-3, 1.5, 1.5);
+scene.add(pointLightLeftCorner);
+
+const pointLightRightCorner = new THREE.PointLight('#1343c9', 1, 5);
+pointLightRightCorner.position.set(3, 1.5, 1.5);
+scene.add(pointLightRightCorner);
+
+const pointLightBackCorner = new THREE.PointLight('#1343c9', 1, 5);
+pointLightBackCorner.position.set(0, 1.5, -3);
+scene.add(pointLightBackCorner);
+
+// create group of big pyramid
+const bigPyramid = new THREE.Group();
+bigPyramid.add(
+    pyramid,
+    door,
+    pointLight,
+    pointLightRightCorner,
+    pointLightBackCorner,
+    pointLightLeftCorner,
+);
+scene.add(bigPyramid);
+
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
     // Update sizes
@@ -270,6 +293,8 @@ const clock = new THREE.Clock();
 // Run animation
 const animate = () => {
     const elapsedTime = clock.getElapsedTime();
+    bigPyramid.position.y = Math.sin(elapsedTime * 0.1) + 1;
+    // bigPyramid.rotation.y = (Math.sin(elapsedTime * 0.1) * Math.PI) / 4;
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
