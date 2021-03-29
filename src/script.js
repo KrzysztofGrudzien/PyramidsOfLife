@@ -51,6 +51,14 @@ const doorRoughnessTexture = texture.load('/textures/door/roughness.jpg');
 const doorHeightTexture = texture.load('/textures/door/height.jpg');
 const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
 const doorAlphaTexture = texture.load('/textures/door/alpha.jpg');
+const sphereAmbientTexture = texture.load(
+    '/textures/metal/ambientOcclusion2.jpg',
+);
+const sphereBaseTexture = texture.load('/textures/metal/color2.jpg');
+const sphereNormalTexture = texture.load('/textures/metal/normal2.jpg');
+const sphereRoughnessTexture = texture.load('/textures/metal/roughness2.jpg');
+const sphereHeightTexture = texture.load('/textures/metal/height2.jpg');
+const sphereMentalnessTexture = texture.load('/textures/metal/metalness2.jpg');
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(40, 40);
@@ -269,6 +277,43 @@ scene.add(flyLightTwo);
 const flyLightThree = new THREE.PointLight('#1c5fc4', 4, 8);
 scene.add(flyLightThree);
 
+// create sphere objects
+const spheres = new THREE.Group();
+scene.add(spheres);
+
+const geometrySphere = new THREE.SphereGeometry(0.5, 64, 64);
+const materialSphere = new THREE.MeshStandardMaterial({
+    map: sphereBaseTexture,
+    aoMap: sphereAmbientTexture,
+    transparent: true,
+    displacementMap: sphereHeightTexture,
+    normalMap: sphereNormalTexture,
+    roughnessMap: sphereRoughnessTexture,
+    displacementScale: 3,
+    metalnessMap: sphereMentalnessTexture,
+});
+
+for (let i = 0; i < 20; i++) {
+    const angleOfSphere = Math.random() * Math.PI * 2;
+    const radius = 3 + Math.random() * 10;
+    const posX = Math.sin(angleOfSphere) * radius;
+    const posZ = Math.cos(angleOfSphere) * radius;
+    const sphere = new THREE.Mesh(geometrySphere, materialSphere);
+    sphere.geometry.setAttribute(
+        'uv2',
+        new THREE.Float32BufferAttribute(
+            sphere.geometry.attributes.uv.array,
+            2,
+        ),
+    );
+
+    spheres.add(sphere);
+    sphere.position.set(posX, 1.5, posZ);
+}
+
+const spherePointLight = new THREE.PointLight('#ec1111', 5, 10);
+spherePointLight.position.y = 1;
+spheres.add(spherePointLight);
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
     // Update sizes
@@ -355,6 +400,8 @@ const animate = () => {
     flyLightThree.position.x = Math.cos(time) * 6;
     flyLightThree.position.z = -Math.sin(time) * 2;
     flyLightThree.position.y = -Math.cos(time) * 5;
+
+    spheres.rotation.y = elapsedTime * 0.1;
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
