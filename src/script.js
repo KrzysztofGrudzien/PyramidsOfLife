@@ -7,6 +7,10 @@ import * as dat from 'dat.gui';
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
+// add fog
+const fog = new THREE.Fog('#1c5fc4', 1, 30);
+scene.fog = fog;
+
 // setup global window size
 const size = {
     width: window.innerWidth,
@@ -46,15 +50,15 @@ const doorHeightTexture = texture.load('/textures/door/height.jpg');
 const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
 const doorAlphaTexture = texture.load('/textures/door/alpha.jpg');
 const grassAmbientTexture = texture.load(
-    '/textures/grass/ambientOcclusion.jpg',
+    '/textures/bricks/ambientOcclusion.jpg',
 );
-const grassBaseTexture = texture.load('/textures/grass/color.jpg');
-const grassNormalTexture = texture.load('/textures/grass/normal.jpg');
-const grassRoughnessTexture = texture.load('/textures/grass/roughness.jpg');
+const grassBaseTexture = texture.load('/textures/bricks/color.jpg');
+const grassNormalTexture = texture.load('/textures/bricks/normal.jpg');
+const grassRoughnessTexture = texture.load('/textures/bricks/roughness.jpg');
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(20, 20);
-const materialPlane = new THREE.MeshBasicMaterial({
+const materialPlane = new THREE.MeshStandardMaterial({
     map: grassBaseTexture,
     aoMap: grassAmbientTexture,
     transparent: true,
@@ -65,19 +69,16 @@ const materialPlane = new THREE.MeshBasicMaterial({
 
 grassBaseTexture.repeat.set(8, 8);
 grassAmbientTexture.repeat.set(8, 8);
-
 grassNormalTexture.repeat.set(8, 8);
 grassRoughnessTexture.repeat.set(8, 8);
 
 grassBaseTexture.wrapS = THREE.RepeatWrapping;
 grassAmbientTexture.wrapS = THREE.RepeatWrapping;
-
 grassNormalTexture.wrapS = THREE.RepeatWrapping;
 grassRoughnessTexture.wrapS = THREE.RepeatWrapping;
 
 grassBaseTexture.wrapT = THREE.RepeatWrapping;
 grassAmbientTexture.wrapT = THREE.RepeatWrapping;
-
 grassNormalTexture.wrapT = THREE.RepeatWrapping;
 grassRoughnessTexture.wrapT = THREE.RepeatWrapping;
 
@@ -91,17 +92,22 @@ ground.rotation.x = groundRotX;
 ground.position.y = 1;
 scene.add(ground);
 
-gui.add(ground.rotation, 'x').min(groundRotX).max(2).step(0.001);
+gui.add(ground.rotation, 'x')
+    .min(groundRotX)
+    .max(2)
+    .step(0.001)
+    .name('ground rotX');
 
 // create pyramid
 const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
-const materialPyramid = new THREE.MeshBasicMaterial({
+const materialPyramid = new THREE.MeshStandardMaterial({
     map: baseTexture,
     aoMap: ambientTexture,
-    transparent: true,
+    //transparent: true,
     displacementMap: heightTexture,
     normalMap: normalTexture,
     roughnessMap: roughnessTexture,
+    side: THREE.DoubleSide,
 });
 
 baseTexture.repeat.set(32, 8);
@@ -134,7 +140,7 @@ scene.add(pyramid);
 //create door to the piramid
 
 const geometryDoor = new THREE.PlaneGeometry(1.1, 1.3);
-const materialDoor = new THREE.MeshBasicMaterial({
+const materialDoor = new THREE.MeshStandardMaterial({
     map: doorBaseTexture,
     aoMap: doorAmbientTexture,
     transparent: true,
@@ -156,6 +162,76 @@ door.position.y = 1.9;
 door.rotation.x = -0.455;
 door.position.x = 0;
 scene.add(door);
+
+// Ambient light
+const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.2);
+gui.add(ambientLight, 'intensity')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('ambient light intensity');
+scene.add(ambientLight);
+
+// Directional light
+const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.2);
+directionalLight.position.set(4, 5, -2);
+gui.add(directionalLight.position, 'x')
+    .min(-5)
+    .max(5)
+    .step(0.001)
+    .name('directional light posX');
+gui.add(directionalLight.position, 'y')
+    .min(-5)
+    .max(5)
+    .step(0.001)
+    .name('directional light posY');
+gui.add(directionalLight.position, 'z')
+    .min(-5)
+    .max(5)
+    .step(0.001)
+    .name('directional light posZ');
+gui.add(directionalLight, 'intensity')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('directional light intensity');
+scene.add(directionalLight);
+
+// Point light
+const pointLight = new THREE.PointLight('#1343c9', 1, 5);
+pointLight.position.set(0, 4, 3);
+scene.add(pointLight);
+
+const pointLightLeftCorner = new THREE.PointLight('#1343c9', 1, 5);
+pointLightLeftCorner.position.set(-3, 1.5, 1.5);
+scene.add(pointLightLeftCorner);
+
+const pointLightRightCorner = new THREE.PointLight('#1343c9', 1, 5);
+pointLightRightCorner.position.set(3, 1.5, 1.5);
+scene.add(pointLightRightCorner);
+
+const pointLightBackCorner = new THREE.PointLight('#1343c9', 1, 5);
+pointLightBackCorner.position.set(0, 1.5, -3);
+scene.add(pointLightBackCorner);
+
+// create group of big pyramid
+const bigPyramid = new THREE.Group();
+bigPyramid.add(
+    pyramid,
+    door,
+    pointLight,
+    pointLightRightCorner,
+    pointLightBackCorner,
+    pointLightLeftCorner,
+);
+scene.add(bigPyramid);
+
+const flyLightOne = new THREE.PointLight('#1c5fc4', 3, 5);
+scene.add(flyLightOne);
+const flyLightTwo = new THREE.PointLight('#1c5fc4', 2, 3);
+scene.add(flyLightTwo);
+const flyLightThree = new THREE.PointLight('#1c5fc4', 4, 8);
+scene.add(flyLightThree);
 
 // Update scene properties when window size changes
 window.addEventListener('resize', () => {
@@ -205,9 +281,9 @@ camera.position.y = 3.5;
 camera.position.z = 10;
 scene.add(camera);
 
-gui.add(camera.position, 'x').min(0.1).max(10).step(0.1);
-gui.add(camera.position, 'y').min(1.2).max(10).step(0.1);
-gui.add(camera.position, 'z').min(0.1).max(20).step(0.1);
+gui.add(camera.position, 'x').min(0.1).max(10).step(0.1).name('camera posX');
+gui.add(camera.position, 'y').min(1.2).max(10).step(0.1).name('camera posY');
+gui.add(camera.position, 'z').min(0.1).max(20).step(0.1).name('camera posZ');
 
 // Add orientation of camera
 const controls = new OrbitControls(camera, canvas);
@@ -228,6 +304,20 @@ const clock = new THREE.Clock();
 // Run animation
 const animate = () => {
     const elapsedTime = clock.getElapsedTime();
+    bigPyramid.position.y = Math.sin(elapsedTime * 0.1) + 1;
+    const time = elapsedTime * 0.5;
+    const timeTwo = -elapsedTime * 0.2;
+    flyLightOne.position.x = Math.cos(time) * 4;
+    flyLightOne.position.z = Math.sin(time) * 8;
+    flyLightOne.position.y = Math.sin(time) * 4;
+
+    flyLightTwo.position.x = -Math.cos(timeTwo) * 7;
+    flyLightTwo.position.z = Math.sin(timeTwo) * 2;
+    flyLightTwo.position.y = Math.sin(time) * 5 + Math.sin(time) * 2.5;
+
+    flyLightThree.position.x = Math.cos(time) * 6;
+    flyLightThree.position.z = -Math.sin(time) * 2;
+    flyLightThree.position.y = -Math.cos(time) * 5;
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
