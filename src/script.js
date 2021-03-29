@@ -305,6 +305,7 @@ for (let i = 0; i < 20; i++) {
         ),
     );
 
+    sphere.castShadow = true;
     spheres.add(sphere);
     sphere.position.set(posX, 1.5, posZ);
 }
@@ -377,6 +378,18 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(size.width, size.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor('#1c5fc4');
+
+// add shadows
+renderer.shadowMap.enabled = true;
+directionalLight.castShadow = true;
+flyLightOne.castShadow = true;
+flyLightTwo.castShadow = true;
+flyLightThree.castShadow = true;
+bigPyramid.castShadow = true;
+pyramidSmallLeftCorner.castShadow = true;
+pyramidSmallRightCornerFar.castShadow = true;
+pyramidSmallRightCornerNear.castShadow = true;
+ground.receiveShadow = true;
 
 // Get time from Three.js
 const clock = new THREE.Clock();
