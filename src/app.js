@@ -12,6 +12,11 @@ class App {
             0.1,
             1000,
         );
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas,
+            antialias: true,
+            alpha: true,
+        });
     }
 
     resize() {
@@ -57,6 +62,12 @@ class App {
         this.camera.position.x = x;
         this.camera.position.y = y;
         this.camera.position.z = z;
+    }
+
+    rendererApp() {
+        this.renderer.setSize(this.width, this.height);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setClearColor('#1c5fc4');
     }
 }
 

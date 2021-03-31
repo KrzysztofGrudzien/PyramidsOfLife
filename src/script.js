@@ -327,15 +327,9 @@ gui.add(camera.position, 'z').min(0.1).max(20).step(0.1).name('camera posZ');
 const controls = new OrbitControls(camera, app.canvas);
 controls.enableDamping = true;
 
-// Render Canvas object in Three.js
-const renderer = new THREE.WebGLRenderer({
-    canvas: app.canvas,
-});
-
-// Set up sizes and pixel ratio for window resolution
-renderer.setSize(app.width, app.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor('#1c5fc4');
+// Add renderer for app
+app.rendererApp();
+const renderer = app.renderer;
 
 // add shadows
 renderer.shadowMap.enabled = true;
