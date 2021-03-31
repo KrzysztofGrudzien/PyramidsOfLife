@@ -5,6 +5,7 @@ import * as dat from 'dat.gui';
 import App from './app.js';
 import AmbientLight from './lights/ambientLight';
 import DirectionalLight from './lights/directionalLight';
+import PointLight from './lights/pointLight';
 
 // create app
 const app = new App();
@@ -235,41 +236,42 @@ gui.add(directionalLight.light, 'intensity')
 app.scene.add(directionalLight.light);
 
 // Point light
-const pointLight = new THREE.PointLight('#1343c9', 1, 5);
-pointLight.position.set(0, 4, 3);
-app.scene.add(pointLight);
+const pointLightOne = new PointLight('#1343c9', 1, 5, 0, 4, 3);
+const pointLightTwo = new PointLight('#1343c9', 1, 5, -3, 1.5, 1.5);
+const pointLightThree = new PointLight('#1343c9', 1, 5, 3, 1.5, 1.5);
+const pointLightFour = new PointLight('#1343c9', 1, 5, 0, 1.5, -3);
 
-const pointLightLeftCorner = new THREE.PointLight('#1343c9', 1, 5);
-pointLightLeftCorner.position.set(-3, 1.5, 1.5);
-app.scene.add(pointLightLeftCorner);
-
-const pointLightRightCorner = new THREE.PointLight('#1343c9', 1, 5);
-pointLightRightCorner.position.set(3, 1.5, 1.5);
-app.scene.add(pointLightRightCorner);
-
-const pointLightBackCorner = new THREE.PointLight('#1343c9', 1, 5);
-pointLightBackCorner.position.set(0, 1.5, -3);
-app.scene.add(pointLightBackCorner);
+app.scene.add(
+    pointLightOne.light,
+    pointLightTwo.light,
+    pointLightThree.light,
+    pointLightFour.light,
+);
 
 // create group of big pyramid
 const bigPyramid = new THREE.Group();
 bigPyramid.add(
     pyramid,
     door,
-    pointLight,
-    pointLightRightCorner,
-    pointLightBackCorner,
-    pointLightLeftCorner,
+    pointLightOne.light,
+    pointLightTwo.light,
+    pointLightThree.light,
+    pointLightFour.light,
 );
 app.scene.add(bigPyramid);
 
 // create additional lights
-const flyLightOne = new THREE.PointLight('#1c5fc4', 3, 5);
-app.scene.add(flyLightOne);
-const flyLightTwo = new THREE.PointLight('#1c5fc4', 2, 3);
-app.scene.add(flyLightTwo);
-const flyLightThree = new THREE.PointLight('#1c5fc4', 4, 8);
-app.scene.add(flyLightThree);
+const flyLightOne = new PointLight('#1c5fc4', 3, 5);
+flyLightOne.lightPosition;
+app.scene.add(flyLightOne.light);
+
+const flyLightTwo = new PointLight('#1c5fc4', 2, 3);
+flyLightTwo.lightPosition;
+app.scene.add(flyLightTwo.light);
+
+const flyLightThree = new PointLight('#1c5fc4', 4, 8);
+flyLightThree.lightPosition;
+app.scene.add(flyLightThree.light);
 
 // create sphere objects
 const spheres = new THREE.Group();
@@ -306,9 +308,26 @@ for (let i = 0; i < 20; i++) {
     sphere.position.set(posX, 1.5, posZ);
 }
 
-const spherePointLight = new THREE.PointLight('#ec1111', 5, 10);
-spherePointLight.position.y = 1;
-spheres.add(spherePointLight);
+const spherePointLight = new PointLight('#ec1111', 5, 10);
+spherePointLight.light.position.y = 1;
+spherePointLight.light.position.x = 0;
+spherePointLight.light.position.z = 0;
+gui.add(spherePointLight.light.position, 'y')
+    .min(0)
+    .max(2)
+    .step(0.001)
+    .name('sphere light posY');
+gui.add(spherePointLight.light.position, 'x')
+    .min(0)
+    .max(5)
+    .step(0.001)
+    .name('sphere light posX');
+gui.add(spherePointLight.light.position, 'z')
+    .min(0)
+    .max(5)
+    .step(0.001)
+    .name('sphere light posZ');
+spheres.add(spherePointLight.light);
 
 // Add resize function
 app.resize();
@@ -340,20 +359,20 @@ directionalLight.castShadow = true;
 ambientLight.castShadow = true;
 spherePointLight.castShadow = true;
 
-flyLightOne.castShadow = true;
-flyLightOne.shadow.mapSize.width = 256;
-flyLightOne.shadow.mapSize.height = 256;
-flyLightOne.shadow.camera.far = 7;
+flyLightOne.light.castShadow = true;
+flyLightOne.light.shadow.mapSize.width = 256;
+flyLightOne.light.shadow.mapSize.height = 256;
+flyLightOne.light.shadow.camera.far = 7;
 
-flyLightTwo.castShadow = true;
-flyLightTwo.shadow.mapSize.width = 256;
-flyLightTwo.shadow.mapSize.height = 256;
-flyLightTwo.shadow.camera.far = 7;
+flyLightTwo.light.castShadow = true;
+flyLightTwo.light.shadow.mapSize.width = 256;
+flyLightTwo.light.shadow.mapSize.height = 256;
+flyLightTwo.light.shadow.camera.far = 7;
 
-flyLightThree.castShadow = true;
-flyLightThree.shadow.mapSize.width = 256;
-flyLightThree.shadow.mapSize.height = 256;
-flyLightThree.shadow.camera.far = 7;
+flyLightThree.light.castShadow = true;
+flyLightThree.light.shadow.mapSize.width = 256;
+flyLightThree.light.shadow.mapSize.height = 256;
+flyLightThree.light.shadow.camera.far = 7;
 
 bigPyramid.castShadow = true;
 pyramidSmallLeftCorner.castShadow = true;
@@ -370,17 +389,18 @@ const animate = () => {
     bigPyramid.position.y = Math.sin(elapsedTime * 0.1) + 1;
     const time = elapsedTime * 0.5;
     const timeTwo = -elapsedTime * 0.2;
-    flyLightOne.position.x = Math.cos(time) * 4;
-    flyLightOne.position.z = Math.sin(time) * 8;
-    flyLightOne.position.y = Math.sin(time) * 4;
 
-    flyLightTwo.position.x = -Math.cos(timeTwo) * 7;
-    flyLightTwo.position.z = Math.sin(timeTwo) * 2;
-    flyLightTwo.position.y = Math.sin(time) * 5 + Math.sin(time) * 2.5;
+    flyLightOne.light.position.x = Math.cos(time) * 4;
+    flyLightOne.light.position.z = Math.sin(time) * 8;
+    flyLightOne.light.position.y = Math.sin(time) * 4;
 
-    flyLightThree.position.x = Math.cos(time) * 6;
-    flyLightThree.position.z = -Math.sin(time) * 2;
-    flyLightThree.position.y = -Math.cos(time) * 5;
+    flyLightTwo.light.position.x = -Math.cos(timeTwo) * 7;
+    flyLightTwo.light.position.z = Math.sin(timeTwo) * 2;
+    flyLightTwo.light.position.y = Math.sin(time) * 5 + Math.sin(time) * 2.5;
+
+    flyLightThree.light.position.x = Math.cos(time) * 6;
+    flyLightThree.light.position.z = -Math.sin(time) * 2;
+    flyLightThree.light.position.y = -Math.cos(time) * 5;
 
     spheres.rotation.y = elapsedTime * 0.1;
     controls.update();
