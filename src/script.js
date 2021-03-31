@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import App from './app.js';
+import AmbientLight from './lights/ambientLight';
+import DirectionalLight from './lights/directionalLight';
 
 // create app
 const app = new App();
@@ -13,6 +15,7 @@ app.scene.fog = fog;
 
 // setup data gui
 const gui = new dat.GUI();
+gui.width = 400;
 
 // get textures
 const loadingManager = new THREE.LoadingManager();
@@ -199,38 +202,37 @@ door.position.x = 0;
 app.scene.add(door);
 
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.4);
-gui.add(ambientLight, 'intensity')
+const ambientLight = new AmbientLight('#b9d5ff', 0.4);
+gui.add(ambientLight.light, 'intensity')
     .min(0)
     .max(1)
     .step(0.001)
     .name('ambient light intensity');
-app.scene.add(ambientLight);
+app.scene.add(ambientLight.light);
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.2);
-directionalLight.position.set(4, 5, -2);
-gui.add(directionalLight.position, 'x')
+const directionalLight = new DirectionalLight('#b9d5ff', 0.2, 4, 5, -2);
+gui.add(directionalLight.light.position, 'x')
     .min(-5)
     .max(5)
     .step(0.001)
     .name('directional light posX');
-gui.add(directionalLight.position, 'y')
+gui.add(directionalLight.light.position, 'y')
     .min(-5)
     .max(5)
     .step(0.001)
     .name('directional light posY');
-gui.add(directionalLight.position, 'z')
+gui.add(directionalLight.light.position, 'z')
     .min(-5)
     .max(5)
     .step(0.001)
     .name('directional light posZ');
-gui.add(directionalLight, 'intensity')
+gui.add(directionalLight.light, 'intensity')
     .min(0)
     .max(1)
     .step(0.001)
     .name('directional light intensity');
-app.scene.add(directionalLight);
+app.scene.add(directionalLight.light);
 
 // Point light
 const pointLight = new THREE.PointLight('#1343c9', 1, 5);
