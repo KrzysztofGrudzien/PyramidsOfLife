@@ -2,26 +2,19 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
+import App from './app.js';
 
-// create scene
-const canvas = document.querySelector('canvas.webgl');
-const scene = new THREE.Scene();
+// create app
+const app = new App();
 
 // add fog
 const fog = new THREE.Fog('#1c5fc4', 1, 15);
-scene.fog = fog;
-
-// setup global window size
-const size = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-};
+app.scene.fog = fog;
 
 // setup data gui
 const gui = new dat.GUI();
 
 // get textures
-
 const loadingManager = new THREE.LoadingManager();
 
 loadingManager.onStart = () => {
@@ -57,7 +50,7 @@ const sphereBaseTexture = texture.load('/textures/metal/color2.jpg');
 const sphereNormalTexture = texture.load('/textures/metal/normal2.jpg');
 const sphereRoughnessTexture = texture.load('/textures/metal/roughness2.jpg');
 const sphereHeightTexture = texture.load('/textures/metal/height2.jpg');
-const sphereMentalnessTexture = texture.load('/textures/metal/metalness2.jpg');
+const sphereMentalnessTexture = texture.load('/textures/metal/metallic2.jpg');
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(40, 40);
@@ -97,7 +90,8 @@ ground.geometry.setAttribute(
 const groundRotX = -Math.PI * 0.5;
 ground.rotation.x = groundRotX;
 ground.position.y = 1;
-scene.add(ground);
+//app.scene.add(ground);
+app.scene.add(ground);
 
 gui.add(ground.rotation, 'x')
     .min(groundRotX)
@@ -124,7 +118,7 @@ pyramid.geometry.setAttribute(
 );
 pyramid.position.y = 3.8;
 pyramid.rotation.y = Math.PI;
-scene.add(pyramid);
+app.scene.add(pyramid);
 
 const pyramidSmallLeftCorner = new THREE.Mesh(geometryPyramid, materialPyramid);
 pyramidSmallLeftCorner.geometry.setAttribute(
@@ -139,7 +133,7 @@ pyramidSmallLeftCorner.position.y = 3.5;
 pyramidSmallLeftCorner.position.x = -16;
 pyramidSmallLeftCorner.position.z = 3;
 pyramidSmallLeftCorner.rotation.y = Math.PI;
-scene.add(pyramidSmallLeftCorner);
+app.scene.add(pyramidSmallLeftCorner);
 
 const pyramidSmallRightCornerNear = new THREE.Mesh(
     geometryPyramid,
@@ -158,7 +152,7 @@ pyramidSmallRightCornerNear.position.y = 3.5;
 pyramidSmallRightCornerNear.position.x = 8;
 pyramidSmallRightCornerNear.position.z = 12;
 pyramidSmallRightCornerNear.rotation.y = Math.PI * 0.5;
-scene.add(pyramidSmallRightCornerNear);
+app.scene.add(pyramidSmallRightCornerNear);
 
 const pyramidSmallRightCornerFar = new THREE.Mesh(
     geometryPyramid,
@@ -177,7 +171,7 @@ pyramidSmallRightCornerFar.position.x = 15;
 pyramidSmallRightCornerFar.rotation.y = Math.PI;
 pyramidSmallRightCornerFar.position.z = -1;
 pyramidSmallRightCornerFar.scale.set(0.5, 0.5, 0.5);
-scene.add(pyramidSmallRightCornerFar);
+app.scene.add(pyramidSmallRightCornerFar);
 
 //create door to the piramid
 
@@ -202,7 +196,7 @@ door.position.z = 2.21;
 door.position.y = 1.9;
 door.rotation.x = -0.455;
 door.position.x = 0;
-scene.add(door);
+app.scene.add(door);
 
 // Ambient light
 const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.4);
@@ -211,7 +205,7 @@ gui.add(ambientLight, 'intensity')
     .max(1)
     .step(0.001)
     .name('ambient light intensity');
-scene.add(ambientLight);
+app.scene.add(ambientLight);
 
 // Directional light
 const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.2);
@@ -236,24 +230,24 @@ gui.add(directionalLight, 'intensity')
     .max(1)
     .step(0.001)
     .name('directional light intensity');
-scene.add(directionalLight);
+app.scene.add(directionalLight);
 
 // Point light
 const pointLight = new THREE.PointLight('#1343c9', 1, 5);
 pointLight.position.set(0, 4, 3);
-scene.add(pointLight);
+app.scene.add(pointLight);
 
 const pointLightLeftCorner = new THREE.PointLight('#1343c9', 1, 5);
 pointLightLeftCorner.position.set(-3, 1.5, 1.5);
-scene.add(pointLightLeftCorner);
+app.scene.add(pointLightLeftCorner);
 
 const pointLightRightCorner = new THREE.PointLight('#1343c9', 1, 5);
 pointLightRightCorner.position.set(3, 1.5, 1.5);
-scene.add(pointLightRightCorner);
+app.scene.add(pointLightRightCorner);
 
 const pointLightBackCorner = new THREE.PointLight('#1343c9', 1, 5);
 pointLightBackCorner.position.set(0, 1.5, -3);
-scene.add(pointLightBackCorner);
+app.scene.add(pointLightBackCorner);
 
 // create group of big pyramid
 const bigPyramid = new THREE.Group();
@@ -265,19 +259,19 @@ bigPyramid.add(
     pointLightBackCorner,
     pointLightLeftCorner,
 );
-scene.add(bigPyramid);
+app.scene.add(bigPyramid);
 
 // create additional lights
 const flyLightOne = new THREE.PointLight('#1c5fc4', 3, 5);
-scene.add(flyLightOne);
+app.scene.add(flyLightOne);
 const flyLightTwo = new THREE.PointLight('#1c5fc4', 2, 3);
-scene.add(flyLightTwo);
+app.scene.add(flyLightTwo);
 const flyLightThree = new THREE.PointLight('#1c5fc4', 4, 8);
-scene.add(flyLightThree);
+app.scene.add(flyLightThree);
 
 // create sphere objects
 const spheres = new THREE.Group();
-scene.add(spheres);
+app.scene.add(spheres);
 
 const geometrySphere = new THREE.SphereGeometry(0.5, 64, 64);
 const materialSphere = new THREE.MeshStandardMaterial({
@@ -313,71 +307,29 @@ for (let i = 0; i < 20; i++) {
 const spherePointLight = new THREE.PointLight('#ec1111', 5, 10);
 spherePointLight.position.y = 1;
 spheres.add(spherePointLight);
-// Update scene properties when window size changes
-window.addEventListener('resize', () => {
-    // Update sizes
-    size.width = window.innerWidth;
-    size.height = window.innerHeight;
 
-    // Update camera properties
-    camera.aspect = size.width / size.height;
-    camera.updateProjectionMatrix();
-
-    // Update renderer function
-    renderer.setSize(size.width, size.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
+// Add resize function
+app.resize();
 
 // Add and remove fullscreen window
-window.addEventListener('dblclick', () => {
-    const fullscreenElement =
-        document.fullscreenElement || document.webkitFullscreenElement;
-
-    if (!fullscreenElement) {
-        if (canvas.requestFullscreen) {
-            canvas.requestFullscreen();
-        } else if (canvas.webkitRequestFullscreen) {
-            canvas.webkitRequestFullscreen();
-        }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
-    }
-});
+app.createFullScreen();
 
 // Set up camera properties
-const camera = new THREE.PerspectiveCamera(
-    75,
-    size.width / size.height,
-    0.1,
-    1000,
-);
-
-camera.position.x = 0;
-camera.position.y = 4.8;
-camera.position.z = 12.8;
-scene.add(camera);
+const camera = app.camera;
+app.setUpCameraPosition(0, 4.8, 12.5);
+app.scene.add(camera);
 
 gui.add(camera.position, 'x').min(0.1).max(10).step(0.1).name('camera posX');
 gui.add(camera.position, 'y').min(1.2).max(10).step(0.1).name('camera posY');
 gui.add(camera.position, 'z').min(0.1).max(20).step(0.1).name('camera posZ');
 
 // Add orientation of camera
-const controls = new OrbitControls(camera, canvas);
+const controls = new OrbitControls(camera, app.canvas);
 controls.enableDamping = true;
 
-// Render Canvas object in Three.js
-const renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-});
-
-// Set up sizes and pixel ratio for window resolution
-renderer.setSize(size.width, size.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor('#1c5fc4');
+// Add renderer for app
+app.rendererApp();
+const renderer = app.renderer;
 
 // add shadows
 renderer.shadowMap.enabled = true;
@@ -430,7 +382,7 @@ const animate = () => {
 
     spheres.rotation.y = elapsedTime * 0.1;
     controls.update();
-    renderer.render(scene, camera);
+    renderer.render(app.scene, camera);
     window.requestAnimationFrame(animate);
 };
 
