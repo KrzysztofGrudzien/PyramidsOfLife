@@ -4,28 +4,17 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import App from './app.js';
 
-// create canvas
+// create app
 const app = new App();
-
-//const canvas = document.querySelector('canvas.webgl');
-
-// create scene
-//const scene = new App();
 
 // add fog
 const fog = new THREE.Fog('#1c5fc4', 1, 15);
 app.scene.fog = fog;
 
-// setup global window size
-
-//const size = new App();
-// const sizeHeight = new App();
-
 // setup data gui
 const gui = new dat.GUI();
 
 // get textures
-
 const loadingManager = new THREE.LoadingManager();
 
 loadingManager.onStart = () => {
@@ -320,24 +309,14 @@ spherePointLight.position.y = 1;
 spheres.add(spherePointLight);
 
 // Add resize function
-const resize = new App();
-resize.resize();
+app.resize();
 
 // Add and remove fullscreen window
-const fullScreen = new App();
-fullScreen.createFullScreen();
+app.createFullScreen();
 
 // Set up camera properties
-const camera = new THREE.PerspectiveCamera(
-    75,
-    app.width / app.height,
-    0.1,
-    1000,
-);
-
-camera.position.x = 0;
-camera.position.y = 4.8;
-camera.position.z = 12.8;
+const camera = app.camera;
+app.setUpCameraPosition(0, 4.8, 12.5);
 app.scene.add(camera);
 
 gui.add(camera.position, 'x').min(0.1).max(10).step(0.1).name('camera posX');

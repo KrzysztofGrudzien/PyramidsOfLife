@@ -6,6 +6,12 @@ class App {
         this.height = window.innerHeight;
         this.canvas = document.querySelector('.webgl');
         this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(
+            75,
+            this.width / this.height,
+            0.1,
+            1000,
+        );
     }
 
     resize() {
@@ -44,6 +50,13 @@ class App {
                 }
             }
         });
+    }
+
+    setUpCameraPosition(x, y, z) {
+        // setup positions of camera
+        this.camera.position.x = x;
+        this.camera.position.y = y;
+        this.camera.position.z = z;
     }
 }
 
