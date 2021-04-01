@@ -10,6 +10,7 @@ import Texture from './materials/texture';
 import Ground from './objects/planeGeometry/ground';
 import Door from './objects/planeGeometry/door';
 import CentralPyramid from './objects/coneGeometry/centralPyramid';
+import Sphere from './objects/sphereGeometry/sphere';
 
 // create app
 const app = new App();
@@ -167,35 +168,15 @@ app.scene.add(flyLightThree.light);
 const spheres = new THREE.Group();
 app.scene.add(spheres);
 
-const geometrySphere = new THREE.SphereGeometry(0.5, 64, 64);
-const materialSphere = new THREE.MeshStandardMaterial({
-    map: texture.sphereBaseTexture,
-    aoMap: texture.sphereAmbientTexture,
-    transparent: true,
-    displacementMap: texture.sphereHeightTexture,
-    normalMap: texture.sphereNormalTexture,
-    roughnessMap: texture.sphereRoughnessTexture,
-    displacementScale: 3,
-    metalnessMap: texture.sphereMentalnessTexture,
-});
-
 for (let i = 0; i < 20; i++) {
+    const sphere = new Sphere();
     const angleOfSphere = Math.random() * Math.PI * 2;
     const radius = 3 + Math.random() * 10;
     const posX = Math.sin(angleOfSphere) * radius;
     const posZ = Math.cos(angleOfSphere) * radius;
-    const sphere = new THREE.Mesh(geometrySphere, materialSphere);
-    sphere.geometry.setAttribute(
-        'uv2',
-        new THREE.Float32BufferAttribute(
-            sphere.geometry.attributes.uv.array,
-            2,
-        ),
-    );
-
-    sphere.castShadow = true;
-    spheres.add(sphere);
-    sphere.position.set(posX, 1.5, posZ);
+    sphere.sphere.castShadow = true;
+    spheres.add(sphere.sphere);
+    sphere.sphere.position.set(posX, 1.5, posZ);
 }
 
 const spherePointLight = new PointLight('#ec1111', 5, 10);
