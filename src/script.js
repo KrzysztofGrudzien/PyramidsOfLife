@@ -7,6 +7,7 @@ import AmbientLight from './lights/ambientLight';
 import DirectionalLight from './lights/directionalLight';
 import PointLight from './lights/pointLight';
 import Texture from './materials/texture';
+import Ground from './objects/planeGeometry/ground';
 
 // create app
 const app = new App();
@@ -22,49 +23,11 @@ gui.width = 400;
 // get textures
 const texture = new Texture();
 
-// create flat ground under scene
-const geometryPlane = new THREE.PlaneGeometry(40, 40);
-const materialPlane = new THREE.MeshStandardMaterial({
-    map: texture.bricksBaseTexture,
-    aoMap: texture.bricksAmbientTexture,
-    transparent: true,
-    displacementMap: texture.bricksHeightTexture,
-    normalMap: texture.bricksNormalTexture,
-    roughnessMap: texture.bricksRoughnessTexture,
-    side: THREE.DoubleSide,
-});
+const ground = new Ground();
+app.scene.add(ground.ground);
 
-texture.bricksBaseTexture.repeat.set(24, 16);
-texture.bricksAmbientTexture.repeat.set(24, 16);
-texture.bricksNormalTexture.repeat.set(24, 16);
-texture.bricksRoughnessTexture.repeat.set(24, 16);
-texture.bricksHeightTexture.repeat.set(24, 16);
-
-texture.bricksBaseTexture.wrapS = THREE.RepeatWrapping;
-texture.bricksAmbientTexture.wrapS = THREE.RepeatWrapping;
-texture.bricksNormalTexture.wrapS = THREE.RepeatWrapping;
-texture.bricksRoughnessTexture.wrapS = THREE.RepeatWrapping;
-texture.bricksHeightTexture.wrapS = THREE.RepeatWrapping;
-
-texture.bricksBaseTexture.wrapT = THREE.RepeatWrapping;
-texture.bricksAmbientTexture.wrapT = THREE.RepeatWrapping;
-texture.bricksNormalTexture.wrapT = THREE.RepeatWrapping;
-texture.bricksRoughnessTexture.wrapT = THREE.RepeatWrapping;
-texture.bricksHeightTexture.wrapT = THREE.RepeatWrapping;
-
-const ground = new THREE.Mesh(geometryPlane, materialPlane);
-ground.geometry.setAttribute(
-    'uv2',
-    new THREE.Float32BufferAttribute(ground.geometry.attributes.uv.array, 2),
-);
-const groundRotX = -Math.PI * 0.5;
-ground.rotation.x = groundRotX;
-ground.position.y = 1;
-//app.scene.add(ground);
-app.scene.add(ground);
-
-gui.add(ground.rotation, 'x')
-    .min(groundRotX)
+gui.add(ground.ground.rotation, 'x')
+    .min(ground.groundRotX)
     .max(2)
     .step(0.001)
     .name('ground rotX');
