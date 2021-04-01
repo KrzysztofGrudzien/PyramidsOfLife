@@ -8,6 +8,7 @@ import DirectionalLight from './lights/directionalLight';
 import PointLight from './lights/pointLight';
 import Texture from './materials/texture';
 import Ground from './objects/planeGeometry/ground';
+import Door from './objects/planeGeometry/door';
 import CentralPyramid from './objects/coneGeometry/centralPyramid';
 
 // create app
@@ -82,38 +83,14 @@ pyramidSmallRightCornerFar.geometry.setAttribute(
         2,
     ),
 );
+
 pyramidSmallRightCornerFar.position.set(15, 2.1, -1);
-// pyramidSmallRightCornerFar.position.y = 2.1;
-// pyramidSmallRightCornerFar.position.x = 15;
-// pyramidSmallRightCornerFar.position.z = -1;
 pyramidSmallRightCornerFar.rotation.y = Math.PI;
 pyramidSmallRightCornerFar.scale.set(0.5, 0.5, 0.5);
 app.scene.add(pyramidSmallRightCornerFar);
 
-//create door to the piramid
-
-const geometryDoor = new THREE.PlaneGeometry(1.1, 1.3);
-const materialDoor = new THREE.MeshStandardMaterial({
-    map: texture.doorBaseTexture,
-    aoMap: texture.doorAmbientTexture,
-    transparent: true,
-    normalMap: texture.doorNormalTexture,
-    roughnessMap: texture.doorRoughnessTexture,
-    side: THREE.DoubleSide,
-    displacementMap: texture.doorHeightTexture,
-    displacementScale: 0.3,
-    metalnessMap: texture.doorMentalnessTexture,
-});
-const door = new THREE.Mesh(geometryDoor, materialDoor);
-door.geometry.setAttribute(
-    'uv2',
-    new THREE.Float32BufferAttribute(door.geometry.attributes.uv.array, 2),
-);
-door.position.z = 2.21;
-door.position.y = 1.9;
-door.rotation.x = -0.455;
-door.position.x = 0;
-app.scene.add(door);
+const door = new Door();
+app.scene.add(door.door);
 
 // Ambient light
 const ambientLight = new AmbientLight('#b9d5ff', 0.4);
@@ -164,8 +141,8 @@ app.scene.add(
 // create group of big pyramid
 const bigPyramid = new THREE.Group();
 bigPyramid.add(
-    pyramid,
-    door,
+    pyramid.pyramid,
+    door.door,
     pointLightOne.light,
     pointLightTwo.light,
     pointLightThree.light,
