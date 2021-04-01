@@ -6,6 +6,7 @@ import App from './app.js';
 import AmbientLight from './lights/ambientLight';
 import DirectionalLight from './lights/directionalLight';
 import PointLight from './lights/pointLight';
+import Texture from './materials/texture';
 
 // create app
 const app = new App();
@@ -19,72 +20,37 @@ const gui = new dat.GUI();
 gui.width = 400;
 
 // get textures
-const loadingManager = new THREE.LoadingManager();
-
-loadingManager.onStart = () => {
-    console.log('start loading');
-};
-
-loadingManager.onLoad = () => {
-    console.log('loaded');
-};
-
-loadingManager.onProgress = () => {
-    console.log('progress loading');
-};
-
-const texture = new THREE.TextureLoader(loadingManager);
-const bricksAmbientTexture = texture.load(
-    '/textures/bricks/ambientOcclusion.jpg',
-);
-const bricksBaseTexture = texture.load('/textures/bricks/color.jpg');
-const bricksHeightTexture = texture.load('/textures/bricks/height.jpg');
-const bricksNormalTexture = texture.load('/textures/bricks/normal.jpg');
-const bricksRoughnessTexture = texture.load('/textures/bricks/roughness.jpg');
-const doorAmbientTexture = texture.load('/textures/door/ambientOcclusion.jpg');
-const doorBaseTexture = texture.load('/textures/door/color.jpg');
-const doorNormalTexture = texture.load('/textures/door/normal.jpg');
-const doorRoughnessTexture = texture.load('/textures/door/roughness.jpg');
-const doorHeightTexture = texture.load('/textures/door/height.jpg');
-const doorMentalnessTexture = texture.load('/textures/door/metalness.jpg');
-const sphereAmbientTexture = texture.load(
-    '/textures/metal/ambientOcclusion2.jpg',
-);
-const sphereBaseTexture = texture.load('/textures/metal/color2.jpg');
-const sphereNormalTexture = texture.load('/textures/metal/normal2.jpg');
-const sphereRoughnessTexture = texture.load('/textures/metal/roughness2.jpg');
-const sphereHeightTexture = texture.load('/textures/metal/height2.jpg');
-const sphereMentalnessTexture = texture.load('/textures/metal/metallic2.jpg');
+const texture = new Texture();
 
 // create flat ground under scene
 const geometryPlane = new THREE.PlaneGeometry(40, 40);
 const materialPlane = new THREE.MeshStandardMaterial({
-    map: bricksBaseTexture,
-    aoMap: bricksAmbientTexture,
+    map: texture.bricksBaseTexture,
+    aoMap: texture.bricksAmbientTexture,
     transparent: true,
-    displacementMap: bricksHeightTexture,
-    normalMap: bricksNormalTexture,
-    roughnessMap: bricksRoughnessTexture,
+    displacementMap: texture.bricksHeightTexture,
+    normalMap: texture.bricksNormalTexture,
+    roughnessMap: texture.bricksRoughnessTexture,
     side: THREE.DoubleSide,
 });
 
-bricksBaseTexture.repeat.set(24, 16);
-bricksAmbientTexture.repeat.set(24, 16);
-bricksNormalTexture.repeat.set(24, 16);
-bricksRoughnessTexture.repeat.set(24, 16);
-bricksHeightTexture.repeat.set(24, 16);
+texture.bricksBaseTexture.repeat.set(24, 16);
+texture.bricksAmbientTexture.repeat.set(24, 16);
+texture.bricksNormalTexture.repeat.set(24, 16);
+texture.bricksRoughnessTexture.repeat.set(24, 16);
+texture.bricksHeightTexture.repeat.set(24, 16);
 
-bricksBaseTexture.wrapS = THREE.RepeatWrapping;
-bricksAmbientTexture.wrapS = THREE.RepeatWrapping;
-bricksNormalTexture.wrapS = THREE.RepeatWrapping;
-bricksRoughnessTexture.wrapS = THREE.RepeatWrapping;
-bricksHeightTexture.wrapS = THREE.RepeatWrapping;
+texture.bricksBaseTexture.wrapS = THREE.RepeatWrapping;
+texture.bricksAmbientTexture.wrapS = THREE.RepeatWrapping;
+texture.bricksNormalTexture.wrapS = THREE.RepeatWrapping;
+texture.bricksRoughnessTexture.wrapS = THREE.RepeatWrapping;
+texture.bricksHeightTexture.wrapS = THREE.RepeatWrapping;
 
-bricksBaseTexture.wrapT = THREE.RepeatWrapping;
-bricksAmbientTexture.wrapT = THREE.RepeatWrapping;
-bricksNormalTexture.wrapT = THREE.RepeatWrapping;
-bricksRoughnessTexture.wrapT = THREE.RepeatWrapping;
-bricksHeightTexture.wrapT = THREE.RepeatWrapping;
+texture.bricksBaseTexture.wrapT = THREE.RepeatWrapping;
+texture.bricksAmbientTexture.wrapT = THREE.RepeatWrapping;
+texture.bricksNormalTexture.wrapT = THREE.RepeatWrapping;
+texture.bricksRoughnessTexture.wrapT = THREE.RepeatWrapping;
+texture.bricksHeightTexture.wrapT = THREE.RepeatWrapping;
 
 const ground = new THREE.Mesh(geometryPlane, materialPlane);
 ground.geometry.setAttribute(
@@ -106,12 +72,12 @@ gui.add(ground.rotation, 'x')
 // create pyramid
 const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
 const materialPyramid = new THREE.MeshStandardMaterial({
-    map: bricksBaseTexture,
-    aoMap: bricksAmbientTexture,
+    map: texture.bricksBaseTexture,
+    aoMap: texture.bricksAmbientTexture,
     transparent: true,
-    displacementMap: bricksHeightTexture,
-    normalMap: bricksNormalTexture,
-    roughnessMap: bricksRoughnessTexture,
+    displacementMap: texture.bricksHeightTexture,
+    normalMap: texture.bricksNormalTexture,
+    roughnessMap: texture.bricksRoughnessTexture,
     side: THREE.DoubleSide,
 });
 
@@ -181,15 +147,15 @@ app.scene.add(pyramidSmallRightCornerFar);
 
 const geometryDoor = new THREE.PlaneGeometry(1.1, 1.3);
 const materialDoor = new THREE.MeshStandardMaterial({
-    map: doorBaseTexture,
-    aoMap: doorAmbientTexture,
+    map: texture.doorBaseTexture,
+    aoMap: texture.doorAmbientTexture,
     transparent: true,
-    normalMap: doorNormalTexture,
-    roughnessMap: doorRoughnessTexture,
+    normalMap: texture.doorNormalTexture,
+    roughnessMap: texture.doorRoughnessTexture,
     side: THREE.DoubleSide,
-    displacementMap: doorHeightTexture,
+    displacementMap: texture.doorHeightTexture,
     displacementScale: 0.3,
-    metalnessMap: doorMentalnessTexture,
+    metalnessMap: texture.doorMentalnessTexture,
 });
 const door = new THREE.Mesh(geometryDoor, materialDoor);
 door.geometry.setAttribute(
@@ -279,14 +245,14 @@ app.scene.add(spheres);
 
 const geometrySphere = new THREE.SphereGeometry(0.5, 64, 64);
 const materialSphere = new THREE.MeshStandardMaterial({
-    map: sphereBaseTexture,
-    aoMap: sphereAmbientTexture,
+    map: texture.sphereBaseTexture,
+    aoMap: texture.sphereAmbientTexture,
     transparent: true,
-    displacementMap: sphereHeightTexture,
-    normalMap: sphereNormalTexture,
-    roughnessMap: sphereRoughnessTexture,
+    displacementMap: texture.sphereHeightTexture,
+    normalMap: texture.sphereNormalTexture,
+    roughnessMap: texture.sphereRoughnessTexture,
     displacementScale: 3,
-    metalnessMap: sphereMentalnessTexture,
+    metalnessMap: texture.sphereMentalnessTexture,
 });
 
 for (let i = 0; i < 20; i++) {
