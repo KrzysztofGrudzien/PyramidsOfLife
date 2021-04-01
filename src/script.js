@@ -8,6 +8,7 @@ import DirectionalLight from './lights/directionalLight';
 import PointLight from './lights/pointLight';
 import Texture from './materials/texture';
 import Ground from './objects/planeGeometry/ground';
+import CentralPyramid from './objects/coneGeometry/centralPyramid';
 
 // create app
 const app = new App();
@@ -32,28 +33,14 @@ gui.add(ground.ground.rotation, 'x')
     .step(0.001)
     .name('ground rotX');
 
-// create pyramid
-const geometryPyramid = new THREE.ConeGeometry(5, 5, 3);
-const materialPyramid = new THREE.MeshStandardMaterial({
-    map: texture.bricksBaseTexture,
-    aoMap: texture.bricksAmbientTexture,
-    transparent: true,
-    displacementMap: texture.bricksHeightTexture,
-    normalMap: texture.bricksNormalTexture,
-    roughnessMap: texture.bricksRoughnessTexture,
-    side: THREE.DoubleSide,
-});
+const pyramid = new CentralPyramid();
+app.scene.add(pyramid.pyramid);
 
-const pyramid = new THREE.Mesh(geometryPyramid, materialPyramid);
-pyramid.geometry.setAttribute(
-    'uv2',
-    new THREE.Float32BufferAttribute(pyramid.geometry.attributes.uv.array, 2),
+const pyramidSmallLeftCorner = new THREE.Mesh(
+    pyramid.geometryPyramid,
+    pyramid.materialPyramid,
 );
-pyramid.position.y = 3.8;
-pyramid.rotation.y = Math.PI;
-app.scene.add(pyramid);
 
-const pyramidSmallLeftCorner = new THREE.Mesh(geometryPyramid, materialPyramid);
 pyramidSmallLeftCorner.geometry.setAttribute(
     'uv2',
     new THREE.Float32BufferAttribute(
@@ -62,15 +49,13 @@ pyramidSmallLeftCorner.geometry.setAttribute(
     ),
 );
 
-pyramidSmallLeftCorner.position.y = 3.5;
-pyramidSmallLeftCorner.position.x = -16;
-pyramidSmallLeftCorner.position.z = 3;
+pyramidSmallLeftCorner.position.set(-16, 3.5, 3);
 pyramidSmallLeftCorner.rotation.y = Math.PI;
 app.scene.add(pyramidSmallLeftCorner);
 
 const pyramidSmallRightCornerNear = new THREE.Mesh(
-    geometryPyramid,
-    materialPyramid,
+    pyramid.geometryPyramid,
+    pyramid.materialPyramid,
 );
 
 pyramidSmallRightCornerNear.geometry.setAttribute(
@@ -81,15 +66,13 @@ pyramidSmallRightCornerNear.geometry.setAttribute(
     ),
 );
 
-pyramidSmallRightCornerNear.position.y = 3.5;
-pyramidSmallRightCornerNear.position.x = 8;
-pyramidSmallRightCornerNear.position.z = 12;
+pyramidSmallRightCornerNear.position.set(8, 3.5, 12);
 pyramidSmallRightCornerNear.rotation.y = Math.PI * 0.5;
 app.scene.add(pyramidSmallRightCornerNear);
 
 const pyramidSmallRightCornerFar = new THREE.Mesh(
-    geometryPyramid,
-    materialPyramid,
+    pyramid.geometryPyramid,
+    pyramid.materialPyramid,
 );
 
 pyramidSmallRightCornerFar.geometry.setAttribute(
@@ -99,10 +82,11 @@ pyramidSmallRightCornerFar.geometry.setAttribute(
         2,
     ),
 );
-pyramidSmallRightCornerFar.position.y = 2.1;
-pyramidSmallRightCornerFar.position.x = 15;
+pyramidSmallRightCornerFar.position.set(15, 2.1, -1);
+// pyramidSmallRightCornerFar.position.y = 2.1;
+// pyramidSmallRightCornerFar.position.x = 15;
+// pyramidSmallRightCornerFar.position.z = -1;
 pyramidSmallRightCornerFar.rotation.y = Math.PI;
-pyramidSmallRightCornerFar.position.z = -1;
 pyramidSmallRightCornerFar.scale.set(0.5, 0.5, 0.5);
 app.scene.add(pyramidSmallRightCornerFar);
 
@@ -284,9 +268,9 @@ const renderer = app.renderer;
 // add shadows
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-directionalLight.castShadow = true;
-ambientLight.castShadow = true;
-spherePointLight.castShadow = true;
+directionalLight.light.castShadow = true;
+ambientLight.light.castShadow = true;
+spherePointLight.light.castShadow = true;
 
 flyLightOne.light.castShadow = true;
 flyLightOne.light.shadow.mapSize.width = 256;
@@ -307,7 +291,7 @@ bigPyramid.castShadow = true;
 pyramidSmallLeftCorner.castShadow = true;
 pyramidSmallRightCornerFar.castShadow = true;
 pyramidSmallRightCornerNear.castShadow = true;
-ground.receiveShadow = true;
+ground.ground.receiveShadow = true;
 
 // Get time from Three.js
 const clock = new THREE.Clock();
