@@ -6,7 +6,6 @@ import App from './app.js';
 import AmbientLight from './lights/ambientLight';
 import DirectionalLight from './lights/directionalLight';
 import PointLight from './lights/pointLight';
-import Texture from './materials/texture';
 import Ground from './objects/planeGeometry/ground';
 import Door from './objects/planeGeometry/door';
 import CentralPyramid from './objects/coneGeometry/centralPyramid';
@@ -23,9 +22,7 @@ app.scene.fog = fog;
 const gui = new dat.GUI();
 gui.width = 400;
 
-// get textures
-const texture = new Texture();
-
+// create ground scene
 const ground = new Ground();
 app.scene.add(ground.ground);
 
