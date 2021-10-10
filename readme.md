@@ -14,3 +14,7 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+## Navigation
+
+1. Scroll - zoom in / zoom out
+2. Click right/left button of mouse and control all scene of project
